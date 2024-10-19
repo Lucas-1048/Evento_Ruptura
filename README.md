@@ -1,8 +1,13 @@
-# React + Vite
+# Chatbot Localiza
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto foi desenvolvido para o evento **Ruptura**, focado em Inteligência Artificial e Empreendedorismo, realizado em parceria com a **Localiza**. O chatbot foi projetado para atender os clientes da página de seminovos da Localiza de forma mais personalizada e, com isso, conseguir aumentar a conversão de leads.
 
-Currently, two official plugins are available:
+## Visão Geral do Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+O projeto é composto por um backend escrito em **Python** utilizando a **API da OpenAI** e o **Flask** para receber requisições, e um frontend desenvolvido em **JavaScript** com o framework **Vite**. O chatbot foi desenvolvido com o objetivo de oferecer uma interface interativa e amigável para os usuários, aproveitando o poder da IA para criar respostas inteligentes e relevantes.
+
+### Funcionalidades Principais
+
+- **Interação em tempo real**: O chatbot responde a perguntas dos usuários em linguagem natural.
+- **Atendimento personalizado**: O bot pode simular atendimento ao cliente com base nas APIs de IA.
+- **Integração com dados**: Informações de backend conectadas a bancos de dados locais e APIs externas.
