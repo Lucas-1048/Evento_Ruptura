@@ -1,6 +1,6 @@
 // hookd
 import { useState } from "react";
-
+import axios from "axios";
 // components
 import {
     Box,
@@ -24,23 +24,21 @@ async function enviarMensagemParaAPI(mensagem) {
     const url = "http://127.0.0.1:5000/process"; // URL da sua API
 
     try {
-        const response = await fetch(url, {
-            method: "POST",
+        const response = await axios.post(url, {
+            message: mensagem,
+        }, {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ message: mensagem }),
         });
 
-        if (!response.ok) {
-            throw new Error`Erro: ${response.statusText}`();
-        }
-
-        const data = await response.json();
-        return [data.response, false];
+        return [response.data.response, false];
     } catch (error) {
         console.error("Erro ao enviar a mensagem:", error);
-        return ["Erro ao realizar pergunta, tente novamente mais tarde", true];
+
+        // Verifica se o erro tem uma resposta e retorna a mensagem de erro adequada
+        const errorMessage = error.response?.data?.error || "Erro ao realizar pergunta, tente novamente mais tarde";
+        return [errorMessage, true];
     }
 }
 
@@ -51,8 +49,8 @@ function ChatApp() {
 
     const handleSendMessage = async () => {
         if (inputValue.trim()) {
-            setMessages([
-                ...messages,
+            setMessages((prevMessages) => [
+                ...prevMessages,
                 {
                     text: inputValue,
                     sender: "user",
@@ -68,8 +66,8 @@ function ChatApp() {
                 botColor = "red.400";
             }
 
-            setMessages([
-                ...messages,
+            setMessages((prevMessages) => [
+                ...prevMessages,
                 { text: answer, sender: "bot", color: botColor },
             ]);
 
@@ -143,8 +141,8 @@ function ChatApp() {
                         spacing="3"
                         overflowY="scroll"
                         align="flex-start"
-                        w="22rem"
-                        h="24rem"
+                        w="36rem"
+                        h="36rem"
                     >
                         {messages.map((message, index) => (
                             <HStack
