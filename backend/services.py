@@ -21,21 +21,26 @@ def send_message(message):
     return resposta.choices[0].message.content
 
 def message_history(message):
-    conn = sqlite3.connect(chat_messages_db)
-    cursor = conn.cursor()
-
-    cursor.execute('SELECT role, content FROM messages ORDER BY id')
-    rows = cursor.fetchall()
+    try:
+        conn = sqlite3.connect(chat_messages_db)
+        cursor = conn.cursor()
     
-    messages_api = []
-    for row in rows:
-        role, content = row 
-        mensagens_api.append({"role": role, "content": content})
-
-    mensagens_api.append({"role": "user", "content": mensagem})
-
-    conn.close()
-    return messages_api
+        cursor.execute('SELECT role, content FROM messages ORDER BY id')
+        rows = cursor.fetchall()
+        
+        messages_api = []
+        for row in rows:
+            role, content = row 
+            mensagens_api.append({"role": role, "content": content})
+    
+        mensagens_api.append({"role": "user", "content": mensagem})
+    
+        conn.close()
+        return messages_api
+        
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+        
 
 def save_message(role, content):
     try:
