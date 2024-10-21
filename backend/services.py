@@ -15,7 +15,7 @@ def send_message(message):
     messages_api = message_history(message)
     
     resposta = client.chat.completions.create(model="gpt-4o-mini",
-        messages=mensagens_api
+        messages=messages_api
     )
     
     return resposta.choices[0].message.content
@@ -31,9 +31,9 @@ def message_history(message):
         messages_api = []
         for row in rows:
             role, content = row 
-            mensagens_api.append({"role": role, "content": content})
+            messages_api.append({"role": role, "content": content})
     
-        mensagens_api.append({"role": "user", "content": mensagem})
+        messages_api.append({"role": "user", "content": message})
     
         conn.close()
         return messages_api
@@ -64,7 +64,7 @@ def process_request(request):
 
 def execute_generated_query(query):
     try:
-        conn = sqlite3.connect(db_file_path)
+        conn = sqlite3.connect(vehicles_db)
 
         cursor = conn.cursor()
         cursor.execute(query)
