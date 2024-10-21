@@ -6,36 +6,40 @@ from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-client = OpenAI(api_key=api_key)
+client = OpenAI(api_key = api_key)
 
-def send_message(mensagem):
-    db_file_path = './backend/Database/chat_messages.db'
-    conn = sqlite3.connect(db_file_path)
+chat_messages_db = './backend/Database/chat_messages.db'
+vehicles_db = './backend/Database/ruptura_vehicles.db'
+
+def send_message(message):
+    messages_api = message_history(message)
+    
+    resposta = client.chat.completions.create(model="gpt-4o-mini",
+        messages=mensagens_api
+    )
+    
+    return resposta.choices[0].message.content
+
+def message_history(message):
+    conn = sqlite3.connect(chat_messages_db)
     cursor = conn.cursor()
 
     cursor.execute('SELECT role, content FROM messages ORDER BY id')
     rows = cursor.fetchall()
     
-    mensagens_api = []
+    messages_api = []
     for row in rows:
         role, content = row 
         mensagens_api.append({"role": role, "content": content})
 
     mensagens_api.append({"role": "user", "content": mensagem})
 
-    resposta = client.chat.completions.create(model="gpt-4o-mini",
-        messages=mensagens_api
-    )
-    
     conn.close()
-    
-    return resposta.choices[0].message.content
+    return messages_api
 
 def save_message(role, content):
-    db_file_path = './backend/Database/chat_messages.db'
-
     try:
-        conn = sqlite3.connect(db_file_path)
+        conn = sqlite3.connect(chat_messages_db)
 
         cursor = conn.cursor()
         cursor.execute('INSERT INTO messages (role, content) VALUES (?, ?)', (role, content))
@@ -54,8 +58,6 @@ def process_request(request):
     return response
 
 def execute_generated_query(query):
-    db_file_path = './backend/Database/ruptura_vehicles.db'
-
     try:
         conn = sqlite3.connect(db_file_path)
 
